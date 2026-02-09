@@ -1,5 +1,5 @@
 // @ts-ignore
-import { elements, showScreen, resetBoardState, updateBoard, updateTurn, showCoinToss, showCoinResult, updatePlayerList } from "./ui.js";
+import { elements, showScreen, resetBoardState, updateBoard, updateTurn, showCoinToss, showCoinResult, updatePlayerList, showChallengeModal, showNotification } from "./ui.js";
 
 // @ts-ignore
 const socket = io();
@@ -53,9 +53,12 @@ socket.on("update_players", (players: any[]) => {
 });
 
 socket.on("challenge_received", (data: any) => {
-    if (confirm(`${data.username} vous defie !`)) {
+    showChallengeModal(data.username, () => {
         socket.emit("accept_challenge", data.fromId);
-    }
+    }, () => {
+        // User declined the challenge
+        console.log("Challenge declined");
+    });
 });
 
 socket.on("game_start", (data: any) => {
@@ -85,11 +88,13 @@ socket.on("game_over", (data: any) => {
     if (data.winner === "DRAW") {
         showCoinToss();
     } else {
-        alert(data.winner === "OPPONENT_DISCONNECTED" ? "Adversaire deconnecte !" : `Victoire: ${data.winner}`);
-        if (data.winner !== "DRAW") {
-            resetBoardState();
-            showScreen("lobby-screen");
-        }
+        const message = data.winner === "OPPONENT_DISCONNECTED" ? "Adversaire deconnecte !" : `Victoire: ${data.winner}`;
+        showNotification("Fin de partie", message, () => {
+            if (data.winner !== "DRAW") {
+                resetBoardState();
+                showScreen("lobby-screen");
+            }
+        });
     }
 });
 
