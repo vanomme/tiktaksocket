@@ -1,0 +1,13 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 24px;
+}
+
+#status {
+  color: #1a7f37;
+  font-weight: bold;
+}
+
+#message {
+  margin-top: 12px;
+}
