@@ -61,6 +61,27 @@
       </div>
     </div>
 
+    <!-- Challenge Modal -->
+    <div id="challenge-modal" class="modal hidden">
+      <div class="modal-content">
+        <h2>Defi recu !</h2>
+        <p id="challenge-message"></p>
+        <div class="modal-buttons">
+          <button id="accept-challenge-btn" class="btn-success">Accepter</button>
+          <button id="decline-challenge-btn" class="btn-danger">Refuser</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Notification Modal -->
+    <div id="notification-modal" class="modal hidden">
+      <div class="modal-content">
+        <h2 id="notification-title">Notification</h2>
+        <p id="notification-message"></p>
+        <button id="close-notification-btn" class="btn-primary">OK</button>
+      </div>
+    </div>
+
   </div>
 
   <script src="/socket.io/socket.io.js"></script>

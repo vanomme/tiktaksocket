@@ -12,7 +12,15 @@ export const elements = {
     coinAnimation: document.getElementById("coin-animation"),
     coinResult: document.getElementById("coin-result"),
     closeModalBtn: document.getElementById("close-modal-btn"),
-    currentUsername: document.getElementById("current-username")
+    currentUsername: document.getElementById("current-username"),
+    challengeModal: document.getElementById("challenge-modal"),
+    challengeMessage: document.getElementById("challenge-message"),
+    acceptChallengeBtn: document.getElementById("accept-challenge-btn"),
+    declineChallengeBtn: document.getElementById("decline-challenge-btn"),
+    notificationModal: document.getElementById("notification-modal"),
+    notificationTitle: document.getElementById("notification-title"),
+    notificationMessage: document.getElementById("notification-message"),
+    closeNotificationBtn: document.getElementById("close-notification-btn")
 };
 export function showScreen(id) {
     document.querySelectorAll("#app > div:not(.modal)").forEach(el => el.classList.add("hidden"));
@@ -81,4 +89,26 @@ export function updatePlayerList(players, myPlayerId, onChallenge, onSpectate) {
         }
         elements.playersUl.appendChild(li);
     });
+}
+export function showChallengeModal(username, onAccept, onDecline) {
+    elements.challengeMessage.textContent = `${username} vous defie !`;
+    elements.challengeModal.classList.remove("hidden");
+    elements.acceptChallengeBtn.onclick = () => {
+        elements.challengeModal.classList.add("hidden");
+        onAccept();
+    };
+    elements.declineChallengeBtn.onclick = () => {
+        elements.challengeModal.classList.add("hidden");
+        onDecline();
+    };
+}
+export function showNotification(title, message, onClose) {
+    elements.notificationTitle.textContent = title;
+    elements.notificationMessage.textContent = message;
+    elements.notificationModal.classList.remove("hidden");
+    elements.closeNotificationBtn.onclick = () => {
+        elements.notificationModal.classList.add("hidden");
+        if (onClose)
+            onClose();
+    };
 }
