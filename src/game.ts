@@ -8,13 +8,12 @@ export class Game {
     id: string;
     playerX: Player;
     playerO: Player;
-    board: (string | null)[]; // 9 cells, null = empty
+    board: (string | null)[]; // 9 cells
     currentTurn: "X" | "O";
     winner: "X" | "O" | "DRAW" | null;
 
-    constructor(id: string, player1: Player, player2: Player) {
+    constructor(id: string, player1: { id: string, username: string }, player2: { id: string, username: string }) {
         this.id = id;
-        // Randomize who starts or gets X/O? For now player1 is X
         this.playerX = { ...player1, symbol: "X" };
         this.playerO = { ...player2, symbol: "O" };
         this.board = Array(9).fill(null);
@@ -23,16 +22,20 @@ export class Game {
     }
 
     makeMove(index: number, playerId: string): boolean {
+        // Basic validation
         if (this.winner) return false;
         if (index < 0 || index > 8) return false;
         if (this.board[index]) return false;
 
-        const player = this.playerX.id === playerId ? "X" : this.playerO.id === playerId ? "O" : null;
-        if (!player || player !== this.currentTurn) return false;
+        // Turn validation
+        const symbol = this.playerX.id === playerId ? "X" : this.playerO.id === playerId ? "O" : null;
+        if (!symbol || symbol !== this.currentTurn) return false;
 
-        this.board[index] = player;
+        // Execute move
+        this.board[index] = symbol;
         this.checkWin();
 
+        // Switch turn if game continues
         if (!this.winner) {
             this.currentTurn = this.currentTurn === "X" ? "O" : "X";
         }
@@ -42,9 +45,9 @@ export class Game {
 
     private checkWin() {
         const wins = [
-            [0, 1, 2], [3, 4, 5], [6, 7, 8], // Rows
-            [0, 3, 6], [1, 4, 7], [2, 5, 8], // Cols
-            [0, 4, 8], [2, 4, 6]             // Diagonals
+            [0, 1, 2], [3, 4, 5], [6, 7, 8],
+            [0, 3, 6], [1, 4, 7], [2, 5, 8],
+            [0, 4, 8], [2, 4, 6]
         ];
 
         for (const [a, b, c] of wins) {
@@ -56,15 +59,6 @@ export class Game {
 
         if (!this.board.includes(null)) {
             this.winner = "DRAW";
-        }
-    }
-
-    resolveDraw(coinTossWinnerId: string) {
-        if (this.winner === 'DRAW') {
-            const tossWinner = this.playerX.id === coinTossWinnerId ? 'X' : 'O';
-            // We don't change the game winner state to X or O, because it WAS a draw. 
-            // But we might want to store who won the toss?
-            // For now, let's just leave it as DRAW and the server handles the event.
         }
     }
 }
